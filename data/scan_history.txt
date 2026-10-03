@@ -1,0 +1,20 @@
+URL:  https://google.com
+Phishing Score: 1
+Result: SAFE WEBSITE
+--------------------------------------
+URL: http://example.com/login/verify-account
+Phishing Score: 4
+Result: PHISHING WEBSITE
+--------------------------------------
+URL: https://google.com
+Phishing Score: 0
+Result: SAFE WEBSITE
+--------------------------------------
+URL: https://google.com
+Phishing Score: 0
+Result: SAFE WEBSITE
+--------------------------------------
+URL: http://192.168.1.100/login/verify
+Phishing Score: 4
+Result: PHISHING WEBSITE
+--------------------------------------
