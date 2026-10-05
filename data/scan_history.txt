@@ -31,3 +31,8 @@ Phishing Score: 0
 Result: SAFE WEBSITE
 Scan Date & Time: 05-10-2026 21:04:16
 --------------------------------------
+URL: https://www.google.com
+Phishing Score: 0
+Result: SAFE WEBSITE
+Scan Date & Time: 05-10-2026 21:22:48
+--------------------------------------

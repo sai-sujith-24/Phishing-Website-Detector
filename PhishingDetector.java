@@ -1,4 +1,6 @@
 import java.io.FileWriter;
+import java.io.FileReader;
+import java.io.BufferedReader;
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -11,260 +13,397 @@ public class Phishingdetector {
 
         Scanner sc = new Scanner(System.in);
 
-        System.out.println("======================================");
-        System.out.println("       PHISHING WEBSITE DETECTOR");
-        System.out.println("======================================");
+        while (true) {
 
-        // Get URL from user
-        System.out.print("Enter website URL: ");
-        String url = sc.nextLine().trim();
+            System.out.println();
+            System.out.println("======================================");
+            System.out.println("       PHISHING WEBSITE DETECTOR");
+            System.out.println("======================================");
+            System.out.println("1. Scan Website");
+            System.out.println("2. View Scan History");
+            System.out.println("3. Exit");
+            System.out.println("======================================");
 
-        int score = 0;
+            System.out.print("Enter your choice: ");
+            String choice = sc.nextLine().trim();
 
-        System.out.println("\nEntered URL: " + url);
-        System.out.println("--------------------------------------");
+            // 1. Scan Website
+            if (choice.equals("1")) {
 
-        // 1. Validate URL format
-        try {
-            URI uri = new URI(url);
+                System.out.print("\nEnter website URL: ");
+                String url = sc.nextLine().trim();
 
-            if (uri.getScheme() == null ||
-                uri.getHost() == null ||
-                (!uri.getScheme().equalsIgnoreCase("http")
-                && !uri.getScheme().equalsIgnoreCase("https"))) {
+                int score = 0;
 
-                System.out.println("Warning: Invalid website URL format.");
-                score++;
+                System.out.println("\nEntered URL: " + url);
+                System.out.println("--------------------------------------");
 
-            } else {
-                System.out.println("Valid website URL format.");
-            }
+                // 1. Validate URL format
+                try {
 
-        } catch (Exception e) {
-            System.out.println("Warning: Invalid website URL format.");
-            score++;
-        }
+                    URI uri = new URI(url);
 
-        // 2. Check URL length
-        if (url.length() > 80) {
+                    if (uri.getScheme() == null ||
+                        uri.getHost() == null ||
+                        (!uri.getScheme().equalsIgnoreCase("http")
+                        && !uri.getScheme().equalsIgnoreCase("https"))) {
 
-            System.out.println("Warning: URL is unusually long.");
-            score++;
+                        System.out.println(
+                            "Warning: Invalid website URL format."
+                        );
 
-        } else {
+                        score++;
 
-            System.out.println("URL length looks normal.");
+                    } else {
 
-        }
+                        System.out.println(
+                            "Valid website URL format."
+                        );
+                    }
 
-        // 3. Check @ symbol
-        if (url.contains("@")) {
-
-            System.out.println("Warning: URL contains @ symbol.");
-            score++;
-
-        } else {
-
-            System.out.println("No @ symbol found.");
-
-        }
-
-        // 4. Check HTTPS
-        if (url.toLowerCase().startsWith("https://")) {
-
-            System.out.println("Secure HTTPS connection detected.");
-
-        } else {
-
-            System.out.println("Warning: HTTPS connection not detected.");
-            score++;
-
-        }
-
-        // 5. Check IP address
-        String ipPattern =
-                ".*\\b(\\d{1,3}\\.){3}\\d{1,3}\\b.*";
-
-        if (url.matches(ipPattern)) {
-
-            System.out.println("Warning: URL contains an IP address.");
-            score++;
-
-        } else {
-
-            System.out.println("No IP address found.");
-
-        }
-
-        // 6. Domain analysis
-        try {
-
-            URI domainURI = new URI(url);
-            String host = domainURI.getHost();
-
-            if (host == null) {
-
-                System.out.println("Warning: Domain could not be identified.");
-                score++;
-
-            } else {
-
-                System.out.println("Domain: " + host);
-
-                // Check domain length
-                if (host.length() > 50) {
+                } catch (Exception e) {
 
                     System.out.println(
-                        "Warning: Domain name is unusually long."
+                        "Warning: Invalid website URL format."
                     );
+
+                    score++;
+                }
+
+                // 2. Check URL length
+                if (url.length() > 80) {
+
+                    System.out.println(
+                        "Warning: URL is unusually long."
+                    );
+
                     score++;
 
                 } else {
 
                     System.out.println(
-                        "Domain length looks normal."
+                        "URL length looks normal."
                     );
-
                 }
 
-                // Check number of subdomains
-                String[] parts = host.split("\\.");
-
-                if (parts.length > 4) {
+                // 3. Check @ symbol
+                if (url.contains("@")) {
 
                     System.out.println(
-                        "Warning: Too many subdomains detected."
+                        "Warning: URL contains @ symbol."
                     );
+
                     score++;
 
                 } else {
 
                     System.out.println(
-                        "Domain structure looks normal."
+                        "No @ symbol found."
                     );
-
                 }
 
-                // Check suspicious hyphen usage
-                if (host.contains("--")) {
+                // 4. Check HTTPS
+                if (url.toLowerCase().startsWith("https://")) {
 
                     System.out.println(
-                        "Warning: Suspicious hyphen pattern detected."
+                        "Secure HTTPS connection detected."
                     );
+
+                } else {
+
+                    System.out.println(
+                        "Warning: HTTPS connection not detected."
+                    );
+
+                    score++;
+                }
+
+                // 5. Check IP address
+                String ipPattern =
+                        ".*\\b(\\d{1,3}\\.){3}\\d{1,3}\\b.*";
+
+                if (url.matches(ipPattern)) {
+
+                    System.out.println(
+                        "Warning: URL contains an IP address."
+                    );
+
                     score++;
 
                 } else {
 
                     System.out.println(
-                        "No suspicious hyphen pattern found."
+                        "No IP address found."
+                    );
+                }
+
+                // 6. Domain analysis
+                try {
+
+                    URI domainURI = new URI(url);
+                    String host = domainURI.getHost();
+
+                    if (host == null) {
+
+                        System.out.println(
+                            "Warning: Domain could not be identified."
+                        );
+
+                        score++;
+
+                    } else {
+
+                        System.out.println(
+                            "Domain: " + host
+                        );
+
+                        if (host.length() > 50) {
+
+                            System.out.println(
+                                "Warning: Domain name is unusually long."
+                            );
+
+                            score++;
+
+                        } else {
+
+                            System.out.println(
+                                "Domain length looks normal."
+                            );
+                        }
+
+                        String[] parts = host.split("\\.");
+
+                        if (parts.length > 4) {
+
+                            System.out.println(
+                                "Warning: Too many subdomains detected."
+                            );
+
+                            score++;
+
+                        } else {
+
+                            System.out.println(
+                                "Domain structure looks normal."
+                            );
+                        }
+
+                        if (host.contains("--")) {
+
+                            System.out.println(
+                                "Warning: Suspicious hyphen pattern detected."
+                            );
+
+                            score++;
+
+                        } else {
+
+                            System.out.println(
+                                "No suspicious hyphen pattern found."
+                            );
+                        }
+                    }
+
+                } catch (Exception e) {
+
+                    System.out.println(
+                        "Warning: Unable to analyze domain."
                     );
 
+                    score++;
                 }
-            }
 
-        } catch (Exception e) {
+                // 7. Check suspicious keywords
+                String[] suspiciousWords = {
+                    "login",
+                    "verify",
+                    "account",
+                    "update",
+                    "secure",
+                    "bank",
+                    "free",
+                    "bonus",
+                    "gift"
+                };
 
-            System.out.println(
-                "Warning: Unable to analyze domain."
-            );
-            score++;
-        }
+                int keywordCount = 0;
 
-        // 7. Check suspicious keywords
-        String[] suspiciousWords = {
-            "login",
-            "verify",
-            "account",
-            "update",
-            "secure",
-            "bank",
-            "free",
-            "bonus",
-            "gift"
-        };
+                for (String word : suspiciousWords) {
 
-        int keywordCount = 0;
+                    if (url.toLowerCase().contains(word)) {
 
-        for (String word : suspiciousWords) {
+                        System.out.println(
+                            "Warning: Suspicious keyword found - "
+                            + word
+                        );
 
-            if (url.toLowerCase().contains(word)) {
+                        score++;
+                        keywordCount++;
+                    }
+                }
+
+                if (keywordCount == 0) {
+
+                    System.out.println(
+                        "No suspicious keywords found."
+                    );
+                }
+
+                // 8. Display phishing score
+                System.out.println("--------------------------------------");
 
                 System.out.println(
-                    "Warning: Suspicious keyword found - " + word
+                    "Phishing Score: " + score
                 );
 
-                score++;
-                keywordCount++;
+                // 9. Determine final result
+                String result;
+
+                if (score <= 1) {
+
+                    result = "SAFE WEBSITE";
+
+                } else if (score <= 3) {
+
+                    result = "SUSPICIOUS WEBSITE";
+
+                } else {
+
+                    result = "PHISHING WEBSITE";
+                }
+
+                System.out.println(
+                    "Result: " + result
+                );
+
+                // 10. Get current date and time
+                LocalDateTime now = LocalDateTime.now();
+
+                DateTimeFormatter formatter =
+                    DateTimeFormatter.ofPattern(
+                        "dd-MM-yyyy HH:mm:ss"
+                    );
+
+                String scanTime = now.format(formatter);
+
+                System.out.println(
+                    "Scan Date & Time: " + scanTime
+                );
+
+                // 11. Save scan history
+                try {
+
+                    FileWriter writer =
+                        new FileWriter(
+                            "data/scan_history.txt",
+                            true
+                        );
+
+                    writer.write(
+                        "URL: " + url + "\n"
+                    );
+
+                    writer.write(
+                        "Phishing Score: " + score + "\n"
+                    );
+
+                    writer.write(
+                        "Result: " + result + "\n"
+                    );
+
+                    writer.write(
+                        "Scan Date & Time: " + scanTime + "\n"
+                    );
+
+                    writer.write(
+                        "--------------------------------------\n"
+                    );
+
+                    writer.close();
+
+                    System.out.println(
+                        "Scan result saved to scan_history.txt."
+                    );
+
+                } catch (IOException e) {
+
+                    System.out.println(
+                        "Error saving scan history."
+                    );
+                }
+
+            }
+
+            // 2. View Scan History
+            else if (choice.equals("2")) {
+
+                System.out.println();
+                System.out.println("======================================");
+                System.out.println("           SCAN HISTORY");
+                System.out.println("======================================");
+
+                try {
+
+                    BufferedReader reader =
+                        new BufferedReader(
+                            new FileReader(
+                                "data/scan_history.txt"
+                            )
+                        );
+
+                    String line;
+                    boolean hasHistory = false;
+
+                    while ((line = reader.readLine()) != null) {
+
+                        System.out.println(line);
+                        hasHistory = true;
+                    }
+
+                    reader.close();
+
+                    if (!hasHistory) {
+
+                        System.out.println(
+                            "No scan history found."
+                        );
+                    }
+
+                } catch (IOException e) {
+
+                    System.out.println(
+                        "Unable to read scan history."
+                    );
+                }
+
+            }
+
+            // 3. Exit
+            else if (choice.equals("3")) {
+
+                System.out.println();
+                System.out.println(
+                    "Thank you for using Phishing Website Detector."
+                );
+
+                System.out.println(
+                    "Exiting program..."
+                );
+
+                break;
+
+            }
+
+            // Invalid choice
+            else {
+
+                System.out.println();
+                System.out.println(
+                    "Invalid choice. Please enter 1, 2, or 3."
+                );
             }
         }
-
-        if (keywordCount == 0) {
-
-            System.out.println(
-                "No suspicious keywords found."
-            );
-
-        }
-
-        // 8. Display phishing score
-        System.out.println("--------------------------------------");
-
-        System.out.println("Phishing Score: " + score);
-
-        // 9. Determine final result
-        String result;
-
-        if (score <= 1) {
-
-            result = "SAFE WEBSITE";
-
-        } else if (score <= 3) {
-
-            result = "SUSPICIOUS WEBSITE";
-
-        } else {
-
-            result = "PHISHING WEBSITE";
-        }
-
-        System.out.println("Result: " + result);
-
-        // 10. Get current date and time
-        LocalDateTime now = LocalDateTime.now();
-
-        DateTimeFormatter formatter =
-                DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
-
-        String scanTime = now.format(formatter);
-
-        System.out.println("Scan Date & Time: " + scanTime);
-
-        // 11. Save scan history
-        try {
-
-            FileWriter writer =
-                new FileWriter("data/scan_history.txt", true);
-
-            writer.write("URL: " + url + "\n");
-            writer.write("Phishing Score: " + score + "\n");
-            writer.write("Result: " + result + "\n");
-            writer.write("Scan Date & Time: " + scanTime + "\n");
-            writer.write("--------------------------------------\n");
-
-            writer.close();
-
-            System.out.println(
-                "Scan result saved to scan_history.txt."
-            );
-
-        } catch (IOException e) {
-
-            System.out.println(
-                "Error saving scan history."
-            );
-        }
-
-        System.out.println("======================================");
 
         sc.close();
     }
