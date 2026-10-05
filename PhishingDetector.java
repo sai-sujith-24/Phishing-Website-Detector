@@ -1,6 +1,8 @@
 import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
 public class Phishingdetector {
@@ -94,7 +96,81 @@ public class Phishingdetector {
 
         }
 
-        // 6. Check suspicious keywords
+        // 6. Domain analysis
+        try {
+
+            URI domainURI = new URI(url);
+            String host = domainURI.getHost();
+
+            if (host == null) {
+
+                System.out.println("Warning: Domain could not be identified.");
+                score++;
+
+            } else {
+
+                System.out.println("Domain: " + host);
+
+                // Check domain length
+                if (host.length() > 50) {
+
+                    System.out.println(
+                        "Warning: Domain name is unusually long."
+                    );
+                    score++;
+
+                } else {
+
+                    System.out.println(
+                        "Domain length looks normal."
+                    );
+
+                }
+
+                // Check number of subdomains
+                String[] parts = host.split("\\.");
+
+                if (parts.length > 4) {
+
+                    System.out.println(
+                        "Warning: Too many subdomains detected."
+                    );
+                    score++;
+
+                } else {
+
+                    System.out.println(
+                        "Domain structure looks normal."
+                    );
+
+                }
+
+                // Check suspicious hyphen usage
+                if (host.contains("--")) {
+
+                    System.out.println(
+                        "Warning: Suspicious hyphen pattern detected."
+                    );
+                    score++;
+
+                } else {
+
+                    System.out.println(
+                        "No suspicious hyphen pattern found."
+                    );
+
+                }
+            }
+
+        } catch (Exception e) {
+
+            System.out.println(
+                "Warning: Unable to analyze domain."
+            );
+            score++;
+        }
+
+        // 7. Check suspicious keywords
         String[] suspiciousWords = {
             "login",
             "verify",
@@ -124,16 +200,18 @@ public class Phishingdetector {
 
         if (keywordCount == 0) {
 
-            System.out.println("No suspicious keywords found.");
+            System.out.println(
+                "No suspicious keywords found."
+            );
 
         }
 
-        // 7. Display phishing score
+        // 8. Display phishing score
         System.out.println("--------------------------------------");
 
         System.out.println("Phishing Score: " + score);
 
-        // 8. Determine final result
+        // 9. Determine final result
         String result;
 
         if (score <= 1) {
@@ -151,7 +229,17 @@ public class Phishingdetector {
 
         System.out.println("Result: " + result);
 
-        // 9. Save scan history
+        // 10. Get current date and time
+        LocalDateTime now = LocalDateTime.now();
+
+        DateTimeFormatter formatter =
+                DateTimeFormatter.ofPattern("dd-MM-yyyy HH:mm:ss");
+
+        String scanTime = now.format(formatter);
+
+        System.out.println("Scan Date & Time: " + scanTime);
+
+        // 11. Save scan history
         try {
 
             FileWriter writer =
@@ -160,6 +248,7 @@ public class Phishingdetector {
             writer.write("URL: " + url + "\n");
             writer.write("Phishing Score: " + score + "\n");
             writer.write("Result: " + result + "\n");
+            writer.write("Scan Date & Time: " + scanTime + "\n");
             writer.write("--------------------------------------\n");
 
             writer.close();

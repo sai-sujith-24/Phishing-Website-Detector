@@ -18,3 +18,16 @@ URL: http://192.168.1.100/login/verify
 Phishing Score: 4
 Result: PHISHING WEBSITE
 --------------------------------------
+URL: https://www.google.com
+Phishing Score: 0
+Result: SAFE WEBSITE
+--------------------------------------
+URL: http://login-verify-account-example.com
+Phishing Score: 4
+Result: PHISHING WEBSITE
+--------------------------------------
+URL: https://www.google.com
+Phishing Score: 0
+Result: SAFE WEBSITE
+Scan Date & Time: 05-10-2026 21:04:16
+--------------------------------------
