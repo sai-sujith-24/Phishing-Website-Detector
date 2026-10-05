@@ -19,9 +19,11 @@ public class Phishingdetector {
             System.out.println("======================================");
             System.out.println("       PHISHING WEBSITE DETECTOR");
             System.out.println("======================================");
-            System.out.println("1. Scan Website");
+            System.out.println("1. Scan a Website");
             System.out.println("2. View Scan History");
-            System.out.println("3. Exit");
+            System.out.println("3. Search Scan History");
+            System.out.println("4. Clear Scan History");
+            System.out.println("5. Exit");
             System.out.println("======================================");
 
             System.out.print("Enter your choice: ");
@@ -157,6 +159,7 @@ public class Phishingdetector {
                             "Domain: " + host
                         );
 
+                        // Domain length
                         if (host.length() > 50) {
 
                             System.out.println(
@@ -172,6 +175,7 @@ public class Phishingdetector {
                             );
                         }
 
+                        // Subdomain check
                         String[] parts = host.split("\\.");
 
                         if (parts.length > 4) {
@@ -189,6 +193,7 @@ public class Phishingdetector {
                             );
                         }
 
+                        // Hyphen check
                         if (host.contains("--")) {
 
                             System.out.println(
@@ -214,7 +219,7 @@ public class Phishingdetector {
                     score++;
                 }
 
-                // 7. Check suspicious keywords
+                // 7. Suspicious keywords
                 String[] suspiciousWords = {
                     "login",
                     "verify",
@@ -250,14 +255,14 @@ public class Phishingdetector {
                     );
                 }
 
-                // 8. Display phishing score
+                // Display score
                 System.out.println("--------------------------------------");
 
                 System.out.println(
                     "Phishing Score: " + score
                 );
 
-                // 9. Determine final result
+                // Determine result
                 String result;
 
                 if (score <= 1) {
@@ -277,7 +282,7 @@ public class Phishingdetector {
                     "Result: " + result
                 );
 
-                // 10. Get current date and time
+                // Scan timestamp
                 LocalDateTime now = LocalDateTime.now();
 
                 DateTimeFormatter formatter =
@@ -291,7 +296,7 @@ public class Phishingdetector {
                     "Scan Date & Time: " + scanTime
                 );
 
-                // 11. Save scan history
+                // Save scan history
                 try {
 
                     FileWriter writer =
@@ -332,7 +337,6 @@ public class Phishingdetector {
                         "Error saving scan history."
                     );
                 }
-
             }
 
             // 2. View Scan History
@@ -376,11 +380,81 @@ public class Phishingdetector {
                         "Unable to read scan history."
                     );
                 }
-
             }
 
-            // 3. Exit
+            // 3. Search Scan History
             else if (choice.equals("3")) {
+
+                System.out.println();
+                System.out.println("======================================");
+                System.out.println("        SEARCH SCAN HISTORY");
+                System.out.println("======================================");
+
+                System.out.print(
+                    "Enter URL or keyword to search: "
+                );
+
+                String search =
+                    sc.nextLine().trim().toLowerCase();
+
+                try {
+
+                    BufferedReader reader =
+                        new BufferedReader(
+                            new FileReader(
+                                "data/scan_history.txt"
+                            )
+                        );
+
+                    String line;
+                    String record = "";
+                    boolean found = false;
+
+                    while ((line = reader.readLine()) != null) {
+
+                        record = record + line + "\n";
+
+                        if (line.startsWith(
+                                "--------------------------------------")) {
+
+                            if (record.toLowerCase().contains(search)) {
+
+                                System.out.println(record);
+                                found = true;
+                            }
+
+                            record = "";
+                        }
+                    }
+
+                    reader.close();
+
+                    if (!found) {
+
+                        System.out.println(
+                            "No matching scan history found."
+                        );
+                    }
+
+                } catch (IOException e) {
+
+                    System.out.println(
+                        "Unable to read scan history."
+                    );
+                }
+            }
+
+            // 4. Clear Scan History
+            else if (choice.equals("4")) {
+
+                System.out.println();
+                System.out.println(
+                    "Clear History feature will be added next."
+                );
+            }
+
+            // 5. Exit
+            else if (choice.equals("5")) {
 
                 System.out.println();
                 System.out.println(
@@ -392,15 +466,15 @@ public class Phishingdetector {
                 );
 
                 break;
-
             }
 
             // Invalid choice
             else {
 
                 System.out.println();
+
                 System.out.println(
-                    "Invalid choice. Please enter 1, 2, or 3."
+                    "Invalid choice. Please enter 1 to 5."
                 );
             }
         }
