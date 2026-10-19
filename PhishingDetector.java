@@ -1,6 +1,7 @@
-import java.io.FileWriter;
-import java.io.FileReader;
 import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileReader;
+import java.io.FileWriter;
 import java.io.IOException;
 import java.net.URI;
 import java.time.LocalDateTime;
@@ -445,14 +446,42 @@ public class Phishingdetector {
             }
 
             // 4. Clear Scan History
-            else if (choice.equals("4")) {
+           // 4. Clear Scan History
+else if (choice.equals("4")) {
+
+    System.out.println();
+    System.out.print(
+        "Are you sure you want to clear scan history? (yes/no): "
+    );
+
+    String confirmation = sc.nextLine().trim();
+
+    if (confirmation.equalsIgnoreCase("yes")) {
+
+        File historyFile = new File("data/scan_history.txt");
+
+        if (historyFile.exists()) {
+
+            try (FileWriter writer = new FileWriter(historyFile, false)) {
 
                 System.out.println();
-                System.out.println(
-                    "Clear History feature will be added next."
-                );
+                System.out.println("Scan history cleared successfully!");
+
+            } catch (IOException e) {
+
+                System.out.println("Unable to clear scan history.");
             }
 
+        } else {
+
+            System.out.println("No scan history file found.");
+        }
+
+    } else {
+
+        System.out.println("Clear history cancelled.");
+    }
+}
             // 5. Exit
             else if (choice.equals("5")) {
 
