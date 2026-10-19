@@ -35,6 +35,13 @@ public class Phishingdetector {
 
                 System.out.print("\nEnter website URL: ");
                 String url = sc.nextLine().trim();
+                // Validate empty URL
+             if (url.isEmpty()) {
+            System.out.println(
+                      "Error: URL cannot be empty. Please try again."
+                );
+    continue;
+}
 
                 int score = 0;
 
