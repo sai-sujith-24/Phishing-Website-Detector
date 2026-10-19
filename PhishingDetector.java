@@ -161,9 +161,58 @@ try {
 
                     } else {
 
-                        System.out.println(
-                            "Domain: " + host
-                        );
+                        
+                        // Suspicious domain pattern analysis
+                        String lowerHost = host.toLowerCase();
+
+                        String normalizedHost = lowerHost
+                                .replace('1', 'l')
+                                .replace('0', 'o')
+                                .replace('3', 'e')
+                                .replace('5', 's');
+
+                        String[] brands = {
+                            "paypal", "google", "amazon",
+                            "microsoft", "apple"
+                        };
+
+                        String[] officialDomains = {
+                            "paypal.com", "google.com", "amazon.com",
+                            "microsoft.com", "apple.com"
+                        };
+
+                        boolean suspiciousBrand = false;
+
+                        for (int i = 0; i < brands.length; i++) {
+
+                            boolean officialDomain =
+                                lowerHost.equals(officialDomains[i]) ||
+                                lowerHost.endsWith("." + officialDomains[i]);
+
+                            if (normalizedHost.contains(brands[i])
+                                    && !officialDomain) {
+
+                                suspiciousBrand = true;
+                                break;
+                            }
+                        }
+
+                        if (suspiciousBrand) {
+
+                            System.out.println(
+                                "Warning: Domain may imitate a known brand."
+                            );
+
+                            score++;
+
+                        } else {
+
+                            System.out.println(
+                                "No known brand impersonation pattern detected."
+                            );
+                        }
+
+                        
 
                         // Domain length
                         if (host.length() > 50) {
@@ -271,7 +320,7 @@ try {
                 // Determine result
                 String result;
 
-                if (score <= 1) {
+                if (score == 0) {
 
                     result = "SAFE WEBSITE";
 
