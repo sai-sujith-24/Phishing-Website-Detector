@@ -49,36 +49,34 @@ public class Phishingdetector {
                 System.out.println("--------------------------------------");
 
                 // 1. Validate URL format
-                try {
+               
+try {
+    URI uri = new URI(url);
 
-                    URI uri = new URI(url);
+    if (uri.getScheme() == null ||
+        uri.getHost() == null ||
+        (!uri.getScheme().equalsIgnoreCase("http")
+        && !uri.getScheme().equalsIgnoreCase("https"))) {
 
-                    if (uri.getScheme() == null ||
-                        uri.getHost() == null ||
-                        (!uri.getScheme().equalsIgnoreCase("http")
-                        && !uri.getScheme().equalsIgnoreCase("https"))) {
+        System.out.println(
+            "Error: Invalid website URL. Please enter a valid HTTP or HTTPS URL."
+        );
+        continue;
 
-                        System.out.println(
-                            "Warning: Invalid website URL format."
-                        );
+    } else {
 
-                        score++;
+        System.out.println(
+            "Valid website URL format."
+        );
+    }
 
-                    } else {
+} catch (Exception e) {
 
-                        System.out.println(
-                            "Valid website URL format."
-                        );
-                    }
-
-                } catch (Exception e) {
-
-                    System.out.println(
-                        "Warning: Invalid website URL format."
-                    );
-
-                    score++;
-                }
+    System.out.println(
+        "Error: Invalid website URL. Please enter a valid HTTP or HTTPS URL."
+    );
+    continue;
+}
 
                 // 2. Check URL length
                 if (url.length() > 80) {
