@@ -8,7 +8,7 @@ import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.Scanner;
 
-public class Phishingdetector {
+public class PhishingDetector {
 
     public static void main(String[] args) {
 
@@ -322,15 +322,15 @@ try {
 
                 if (score == 0) {
 
-                    result = "SAFE WEBSITE";
+                    result = "NO OBVIOUS RISK INDICATORS (NOT GUARANTEED SAFE)";
 
                 } else if (score <= 3) {
 
-                    result = "SUSPICIOUS WEBSITE";
+                    result = "SUSPICIOUS WEBSITE (HEURISTIC RESULT)";
 
                 } else {
 
-                    result = "PHISHING WEBSITE";
+                    result = "HIGH-RISK WEBSITE (HEURISTIC RESULT)";
                 }
 
                 System.out.println(
@@ -354,6 +354,7 @@ try {
                 // Save scan history
                 try {
 
+                    new File("data").mkdirs();
                     FileWriter writer =
                         new FileWriter(
                             "data/scan_history.txt",
